@@ -45,7 +45,7 @@ public class Products {
 	@Column(nullable=false)
 	private String availabilityStatus;	
 	
-	@OneToMany(mappedBy="products",cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="products")
 	private List<ProductsImages> productImagesList = new ArrayList<>();
 	
 	public Integer getProductId() {

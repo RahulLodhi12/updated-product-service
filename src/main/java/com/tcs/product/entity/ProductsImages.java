@@ -24,7 +24,6 @@ public class ProductsImages {
 	
 	@ManyToOne
 	@JoinColumn(name="product_id") //F.K connects with Products table
-	@JsonIgnore
 	private Products products;
 
 	
@@ -54,7 +53,8 @@ public class ProductsImages {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
+	
+	@JsonIgnore
 	public Products getProduct() {
 		return products;
 	}
