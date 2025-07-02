@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.product.entity.Products;
 import com.tcs.product.entity.ProductsImages;
+import com.tcs.product.exception.ImageFormatException;
+import com.tcs.product.exception.NoProductsFoundException;
 import com.tcs.product.service.ProductService;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/products/{name}") //public url
-	public List<Products> getAllProductByName(@PathVariable String name){
+	public List<Products> getAllProductByName(@PathVariable String name) throws NoProductsFoundException{
 		return productService.getAllProductsByName(name);
 	}
 	
@@ -45,12 +47,12 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product/{id}") //public url
-	public Optional<Products> getProductById(@PathVariable Integer id) {
+	public Optional<Products> getProductById(@PathVariable Integer id) throws NoProductsFoundException {
 		return productService.getProductById(id);
 	}
 	
 	@GetMapping("/productImage/{id}")
-	public List<ProductsImages> getProductImageById(@PathVariable Integer id){
+	public List<ProductsImages> getProductImageById(@PathVariable Integer id) throws NoProductsFoundException{
 		return productService.getProductImageById(id);
 	}
 	
@@ -60,17 +62,17 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/admin/products/{id}")
-	public String deleteProduct(@PathVariable Integer id) {
+	public String deleteProduct(@PathVariable Integer id) throws NoProductsFoundException {
 		return productService.deleteProduct(id);
 	}
 	
 	@PutMapping("/admin/products/{id}")
-	public String updateProduct(@PathVariable Integer id, @RequestBody Products product, @RequestParam String imageUrl, @RequestParam int imgId) {
+	public String updateProduct(@PathVariable Integer id, @RequestBody Products product, @RequestParam String imageUrl, @RequestParam int imgId) throws NoProductsFoundException {
 		return productService.updateProduct(id, product, imageUrl, imgId);
 	}
 	
 	@PostMapping("/admin/products/{id}/image")
-	public void uploadProductImages(@PathVariable Integer id, @RequestParam String url) {
+	public void uploadProductImages(@PathVariable Integer id, @RequestParam String url) throws ImageFormatException {
 		productService.uploadProductImages(id,url);
 	}
 	

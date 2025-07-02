@@ -12,4 +12,9 @@ public class CustomExceptionController {
 	public ResponseEntity<Object> NoProductsFoundException(NoProductsFoundException exception){
 		return new ResponseEntity<>("No product matched the search", HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(value=ImageFormatException.class)
+	public ResponseEntity<Object> ImageFormatException(ImageFormatException exception){
+		return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
+	}
 }

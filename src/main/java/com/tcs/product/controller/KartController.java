@@ -26,10 +26,10 @@ public class KartController {
 
 
 	@PostMapping("/user/products/addCart") //add to cart + update the quantity
-	public boolean addProductToKart(@RequestParam Integer cid, @RequestParam Integer pid) {
+	public boolean addProductToKart(@RequestParam Integer cid, @RequestParam Integer pid) throws NoProductsFoundException {
 		boolean res = kartService.addProductToKart(cid, pid);
 		if(res==false) {
-			throw new NoProductsFoundException();
+			throw new NoProductsFoundException("No product matched the search");
 		}
 		return res;
 	}

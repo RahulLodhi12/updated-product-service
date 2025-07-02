@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.tcs.product.entity.Products;
 import com.tcs.product.entity.ProductsImages;
+import com.tcs.product.exception.ImageFormatException;
 import com.tcs.product.exception.NoProductsFoundException;
 import com.tcs.product.repository.ProductRepository;
 import com.tcs.product.repository.ProductsImagesRepository;
@@ -27,7 +28,7 @@ public class ProductService {
 		return productRepoitory.save(product);
 	}
 	
-	public String updateProduct(Integer id, Products product, String imageUrl, int imgId) {
+	public String updateProduct(Integer id, Products product, String imageUrl, int imgId) throws NoProductsFoundException {
 		product.setProductId(id);
 		List<ProductsImages> piList = productImageRepo.findByProductsProductId(product.getProductId());
 		
@@ -43,7 +44,7 @@ public class ProductService {
 			return "Update Sucess";
 		}
 		else {	
-			throw new NoProductsFoundException();
+			throw new NoProductsFoundException("No product matched the search");
 		}
 	}
 	
@@ -51,33 +52,36 @@ public class ProductService {
 		return productRepoitory.findAll(PageRequest.of(page,size));
 	}
 	
-	public List<Products> getAllProductsByName(String name){
+	public List<Products> getAllProductsByName(String name) throws NoProductsFoundException{
 		if(productRepoitory.findByProductNameContainingIgnoreCase(name).isEmpty())
-			throw new NoProductsFoundException();
+			throw new NoProductsFoundException("No product matched the search");
 		else return productRepoitory.findByProductNameContainingIgnoreCase(name);
 	}
 	
-	public String deleteProduct(Integer id) {
+	public String deleteProduct(Integer id) throws NoProductsFoundException {
 		if(productRepoitory.findById(id).isPresent()) {
 			productRepoitory.deleteById(id);
 			return "The Item with ID: "+id+" is deleted!!";
-		}else throw new NoProductsFoundException();
+		}else throw new NoProductsFoundException("No product matched the search");
 	}
 
 	public List<Products> getProductByCategories(String category) {
 		return productRepoitory.findByCategoryContainingIgnoreCase(category);
 	}
 
-	public Optional<Products> getProductById(Integer id) {
+	public Optional<Products> getProductById(Integer id) throws NoProductsFoundException {
 		Optional<Products> product = productRepoitory.findById(id);
 		if(product.isEmpty()) {
-			throw new NoProductsFoundException();
+			throw new NoProductsFoundException("No product matched the search");
 		}
 		
 		return product;
 	}
 
-	public void uploadProductImages(Integer id, String url) {
+	public void uploadProductImages(Integer id, String url) throws ImageFormatException {
+		if(!(url.contains(".jpg") || url.contains(".png"))) {
+			throw new ImageFormatException("Only jpg and png format Allowed..");
+		}
 		Optional<Products> product = productRepoitory.findById(id);
 		if(product.isEmpty()) {
 			System.out.println("Not uploaded..1");
@@ -103,10 +107,10 @@ public class ProductService {
 		}
 	}
 	
-	public List<ProductsImages> getProductImageById(Integer id) {
+	public List<ProductsImages> getProductImageById(Integer id) throws NoProductsFoundException {
 		Optional<Products> product = productRepoitory.findById(id);
 		if(product.isEmpty()) {
-			throw new NoProductsFoundException();
+			throw new NoProductsFoundException("No product matched the search");
 		}
 		
 		List<ProductsImages> productImages = productImageRepo.findByProductsProductId(product.get().getProductId());
