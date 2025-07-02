@@ -27,17 +27,19 @@ public class ProductService {
 		return productRepoitory.save(product);
 	}
 	
-	public String updateProduct(Integer id, Products product, String imageUrl) {
+	public String updateProduct(Integer id, Products product, String imageUrl, int imgId) {
 		product.setProductId(id);
 		List<ProductsImages> piList = productImageRepo.findByProductsProductId(product.getProductId());
 		
-		piList.get(0).setProduct(product);
-		piList.get(0).setUrl(imageUrl);
+		if(!piList.isEmpty()) {			
+			piList.get(imgId).setProduct(product);
+			piList.get(imgId).setUrl(imageUrl);
+		}
 		
 		product.setProductImagesList(null);
 		if(productRepoitory.findById(id).isPresent()) {	
 			productRepoitory.save(product);
-			productImageRepo.saveAll(piList);
+			if(!piList.isEmpty()) productImageRepo.saveAll(piList);
 			return "Update Sucess";
 		}
 		else {	

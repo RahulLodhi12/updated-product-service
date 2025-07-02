@@ -65,8 +65,8 @@ public class ProductController {
 	}
 	
 	@PutMapping("/admin/products/{id}")
-	public String updateProduct(@PathVariable Integer id, @RequestBody Products product, @RequestParam String imageUrl) {
-		return productService.updateProduct(id, product, imageUrl);
+	public String updateProduct(@PathVariable Integer id, @RequestBody Products product, @RequestParam String imageUrl, @RequestParam int imgId) {
+		return productService.updateProduct(id, product, imageUrl, imgId);
 	}
 	
 	@PostMapping("/admin/products/{id}/image")
