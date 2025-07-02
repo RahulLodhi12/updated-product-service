@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,8 +30,8 @@ public class ProductController {
 	ProductService productService;
 	
 	@GetMapping("/products") //public url
-	public List<Products> getAllProducts(){
-		return productService.getAllProducts();
+	public Page<Products> getAllProducts(@RequestParam int page, @RequestParam int size){
+		return productService.getAllProducts(page,size);
 	}
 	
 	@GetMapping("/products/{name}") //public url
